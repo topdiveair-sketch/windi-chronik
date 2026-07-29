@@ -1,5 +1,17 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-29T00:00:00Z",
-  "stories": []
+  "updatedAt": "2026-07-29T19:25:00Z",
+  "stories": [
+    {
+      "id": "2026-07-29-johann-die-windi-chronik",
+      "title": "Die Windi-Chronik – Band 1: Das Zuhause der Geschichten",
+      "body": "Jede Reise beginnt mit einem ersten Schritt. Manche Menschen sammeln Souvenirs. Andere fotografieren Landschaften. Doch die schönsten Erinnerungen entstehen durch Begegnungen, kleine Zufälle und Erlebnisse, die man nie wieder vergisst. Genau dafür entsteht die Windi-Chronik. Hier sammeln wir keine Bewertungen und keine Sterne. Wir sammeln Geschichten. Geschichten von Wanderern auf dem Welterbesteig, von Radfahrern am Donauradweg, von Familien, Freunden und Alleinreisenden. Geschichten über Sonnenaufgänge, Begegnungen mit Tieren, ein gutes Glas Wein beim Heurigen, das Rauschen der Donau oder einen stillen Abend am Bach. Die wilden Wachauer Windis – Fidel, Gloria und Pia – laden jeden Gast ein, ein kleines Kapitel zu hinterlassen. Vielleicht ist es nur eine lustige Begebenheit. Vielleicht eine große Wanderung. Vielleicht eine Freundschaft, die hier begonnen hat. Eines Tages wird aus all diesen Erlebnissen ein Buch entstehen – geschrieben von Menschen aus aller Welt, die eines gemeinsam haben: Sie waren einmal Zuhause am Bach. Willkommen in der Windi-Chronik. Die Geschichte beginnt heute. Die nächsten Seiten gehören euch.",
+      "author": "Johann",
+      "adventureDate": "29.07.2026",
+      "category": "Zuhause am Bach · Aggsbach Markt",
+      "status": "published",
+      "source": "Outlook-Einreichung",
+      "consent": true
+    }
+  ]
 }
