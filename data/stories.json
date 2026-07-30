@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-29T19:25:00Z",
+  "updatedAt": "2026-07-30T08:58:00Z",
   "stories": [
     {
       "id": "2026-07-29-johann-die-windi-chronik",
@@ -9,6 +9,9 @@
       "author": "Johann",
       "adventureDate": "29.07.2026",
       "category": "Zuhause am Bach · Aggsbach Markt",
+      "imageUrls": [
+        "https://raw.githubusercontent.com/topdiveair-sketch/windi-chronik/main/media/2026-07-29-johann/chronik.png"
+      ],
       "status": "published",
       "source": "Outlook-Einreichung",
       "consent": true
