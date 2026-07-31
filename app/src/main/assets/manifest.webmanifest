@@ -1,0 +1,9 @@
+{
+  "name": "Windi-Gemeinschaft – Zuhause am Bach",
+  "short_name": "Windi-Chronik",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f6f0e3",
+  "theme_color": "#315c42",
+  "description": "Gäste erzählen Wanderungen, Radtouren und Erlebnisse aus der Wachau für die Windi-Chronik."
+}

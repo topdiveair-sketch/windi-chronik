@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#315c42">
+  <title>Windi-Gemeinschaft</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">Zuhause am Bach · Aggsbach Markt</div>
+      <h1>Die Windi-Gemeinschaft</h1>
+      <p>Gemeinsam bewahren wir die Erlebnisse der Wachau für die Nachwelt.</p>
+    </div>
+    <div class="dogline">Fidel · Gloria · Pia</div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Hauptnavigation">
+  <button class="tab active" data-view="home">Start</button>
+  <button class="tab" data-view="submit">Erlebnis erzählen</button>
+  <button class="tab" data-view="chronicle">Chronik</button>
+  <button class="tab admin-tab" data-view="editorial">🔒 Redaktion</button>
+  <button class="tab" data-view="book">Jahresbuch</button>
+  <button class="tab" data-view="settings">Daten</button>
+</nav>
+
+<main>
+  <section id="view-home" class="view active">
+    <article class="welcome panel">
+      <span class="eyebrow dark">WERDE TEIL DER WINDI-GEMEINSCHAFT</span>
+      <h2>Jeder Weg erzählt eine Geschichte.</h2>
+      <p>Erzähle von deiner Wanderung, deiner Radtour, einer Begegnung oder einem besonderen Platz in der Wachau. Dein Erlebnis kann nach redaktioneller Freigabe Teil der Windi-Chronik und des jährlichen Buches werden.</p>
+      <div class="home-actions">
+        <button data-go="submit">Mein Erlebnis erzählen</button>
+        <button class="secondary" data-go="chronicle">Chronik lesen</button>
+      </div>
+    </article>
+
+    <section class="feature-grid">
+      <article class="feature"><strong>🥾 Wandern</strong><span>Welterbesteig, Aussichtspunkte und stille Wege.</span></article>
+      <article class="feature"><strong>🚲 Radfahren</strong><span>Donauradweg, Umwege und besondere Pausen.</span></article>
+      <article class="feature"><strong>📖 Bewahren</strong><span>Erlebnisse für Kinder, Enkel und kommende Gäste.</span></article>
+      <article class="feature"><strong>🐾 Windis</strong><span>Fidel, Gloria und Pia begleiten die Geschichten.</span></article>
+    </section>
+
+    <article class="quote-card">
+      <p>„Nicht als Bewertung. Nicht als Werbung. Sondern als lebendige Chronik der Wachau.“</p>
+    </article>
+  </section>
+
+  <section id="view-submit" class="view">
+    <form id="storyForm" class="panel">
+      <span class="eyebrow dark">DEIN BEITRAG</span>
+      <h2>Erzähle dein Wachau-Erlebnis</h2>
+      <p class="hint">Schreibe so, wie du es erlebt hast. Die Redaktion kann Rechtschreibung und Formulierungen später behutsam verbessern.</p>
+
+      <div class="grid two">
+        <label>Datum des Erlebnisses *
+          <input id="date" type="date" required>
+        </label>
+        <label>Vorname, Spitzname oder „anonym“
+          <input id="author" maxlength="80" placeholder="z. B. Anna und Martin">
+        </label>
+      </div>
+
+      <div class="grid two">
+        <label>Art des Erlebnisses *
+          <select id="type" required>
+            <option value="Wanderung">Wanderung</option>
+            <option value="Radtour">Radtour</option>
+            <option value="Ausflug">Ausflug</option>
+            <option value="Naturerlebnis">Naturerlebnis</option>
+            <option value="Begegnung">Begegnung</option>
+            <option value="Familienerlebnis">Familienerlebnis</option>
+          </select>
+        </label>
+        <label>Titel oder Strecke *
+          <input id="route" required placeholder="z. B. Von Aggsbach Markt nach Spitz">
+        </label>
+      </div>
+
+      <div class="grid three">
+        <label>Start
+          <input id="start" placeholder="Aggsbach Markt">
+        </label>
+        <label>Ziel
+          <input id="destination" placeholder="Spitz">
+        </label>
+        <label>Ort(e)
+          <input id="places" placeholder="Donau, Welterbesteig">
+        </label>
+      </div>
+
+      <div class="grid three">
+        <label>Kilometer
+          <input id="distance" type="number" min="0" step="0.1" inputmode="decimal">
+        </label>
+        <label>Dauer
+          <input id="duration" placeholder="z. B. 4 Stunden">
+        </label>
+        <label>Schwierigkeit
+          <select id="difficulty">
+            <option>Leicht</option>
+            <option>Mittel</option>
+            <option>Anspruchsvoll</option>
+          </select>
+        </label>
+      </div>
+
+      <label>Was hast du erlebt? *
+        <textarea id="story" rows="9" required placeholder="Was war besonders? Wen habt ihr getroffen? Gab es einen lustigen Umweg, einen überraschenden Ausblick oder einen Moment, den ihr nie vergessen werdet?"></textarea>
+      </label>
+
+      <label>Dein Geheimtipp
+        <textarea id="tip" rows="3" placeholder="Welchen Platz, Wegabschnitt oder Gasthof würdest du anderen empfehlen?"></textarea>
+      </label>
+
+      <label>Fotos
+        <input id="photos" type="file" accept="image/*" multiple>
+      </label>
+      <div id="photoPreview" class="photo-preview"></div>
+
+      <fieldset>
+        <legend>Veröffentlichung</legend>
+        <label class="check">
+          <input id="consent" type="checkbox" required>
+          Ich bin einverstanden, dass mein Beitrag nach redaktioneller Prüfung in der Windi-Chronik, auf der Website, in sozialen Medien und im Jahresbuch veröffentlicht werden darf.
+        </label>
+        <label class="check">
+          <input id="anonymous" type="checkbox">
+          Bitte meinen Beitrag anonym veröffentlichen.
+        </label>
+      </fieldset>
+
+      <button type="submit">Erlebnis einreichen</button>
+      <div id="savedMessage" class="success hidden">Danke! Dein Erlebnis wurde für die Redaktion gespeichert.</div>
+    </form>
+  </section>
+
+  <section id="view-chronicle" class="view">
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="Chronik durchsuchen …">
+      <select id="yearFilter"><option value="">Alle Jahre</option></select>
+      <select id="typeFilter"><option value="">Alle Erlebnisse</option></select>
+    </div>
+    <div id="publishedList" class="cards"></div>
+    <div id="publishedEmpty" class="empty">Noch keine veröffentlichten Geschichten.</div>
+  </section>
+
+  <section id="view-editorial" class="view">
+    <article class="panel">
+      <span class="eyebrow dark">REDAKTION</span>
+      <h2>Offene Gastbeiträge</h2>
+      <p class="hint">Hier prüfst du Beiträge, bindest Fidel, Gloria und Pia ein und gibst Geschichten für Chronik und Jahresbuch frei.</p>
+      <div id="pendingList" class="cards"></div>
+    </article>
+  </section>
+
+  <section id="view-book" class="view">
+    <article class="panel">
+      <span class="eyebrow dark">JAHRESBUCH</span>
+      <h2>Zuhause am Bach – Die Windi-Chronik</h2>
+      <div class="grid two">
+        <label>Jahr<select id="bookYear"></select></label>
+        <label>Untertitel<input id="bookSubtitle" value="Erlebnisse aus der Wachau – erzählt von Gästen und begleitet von Fidel, Gloria und Pia"></label>
+      </div>
+      <div class="actions">
+        <button id="buildBook" type="button">Buchvorschau erstellen</button>
+        <button id="printBook" class="secondary" type="button">Als PDF drucken</button>
+      </div>
+    </article>
+    <article id="bookPreview" class="book"></article>
+  </section>
+
+  <section id="view-settings" class="view">
+    <article class="panel">
+      <span class="eyebrow dark">DATEN & APP</span>
+      <h2>Datensicherung</h2>
+      <p>Beiträge werden zentral auf dem Windi-Chronik-Server gespeichert. Trage hier die Serveradresse ein.</p>
+      <div class="grid two">
+        <label>Serveradresse<input id="apiUrl" placeholder="https://deine-domain.at/windi-api/api.php"></label>
+        <label>Redaktionscode<input id="adminToken" type="password" placeholder="Redaktionscode"></label>
+      </div>
+      <div class="actions wrap"><button id="saveConnection" type="button">Verbindung speichern und testen</button></div>
+      <div id="connectionStatus" class="hint"></div>
+      <div class="actions wrap">
+        <button id="exportBtn">Backup exportieren</button>
+        <label class="fileButton">Backup importieren<input id="importFile" type="file" accept="application/json" hidden></label>
+        <button id="demoBtn" class="secondary">Demo-Geschichten anlegen</button>
+        <button id="clearBtn" class="danger">Alle Daten löschen</button>
+      </div>
+
+      <h3>Für die spätere Android-APK vorbereitet</h3>
+      <ul>
+        <li>Zentrale Speicherung für alle Gäste und Geräte</li>
+        <li>PWA-Struktur mit Manifest und Service Worker</li>
+        <li>JSON-Datenmodell für Codex, Capacitor oder native Android-Entwicklung</li>
+        <li>Klare Trennung zwischen Gastbeitrag, Redaktion und Veröffentlichung</li>
+      </ul>
+    </article>
+  </section>
+</main>
+
+<dialog id="editDialog">
+  <form id="editForm">
+    <input id="editId" type="hidden">
+    <span class="eyebrow dark">REDAKTIONELLE BEARBEITUNG</span>
+    <h2>Geschichte für die Windi-Chronik</h2>
+    <label>Buchtitel der Geschichte *
+      <input id="editTitle" required>
+    </label>
+    <fieldset>
+      <legend>Welche Windis begleiten das Abenteuer?</legend>
+      <label class="check"><input type="checkbox" name="windi" value="Fidel" checked> Fidel</label>
+      <label class="check"><input type="checkbox" name="windi" value="Gloria" checked> Gloria</label>
+      <label class="check"><input type="checkbox" name="windi" value="Pia" checked> Pia</label>
+    </fieldset>
+    <label>Redaktionelle Geschichte *
+      <textarea id="editStory" rows="11" required></textarea>
+    </label>
+    <label>Schlusssatz
+      <input id="editClosing" placeholder="Manche Wege werden zu Geschichten, die bleiben.">
+    </label>
+    <div class="actions">
+      <button type="submit">Freigeben und veröffentlichen</button>
+      <button id="cancelEdit" type="button" class="secondary">Abbrechen</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>
