@@ -2,7 +2,7 @@ name: Build Einkauf App APK
 
 on:
   push:
-    branches: [main, einkauf-app-apk]
+    branches: [main, einkauf-app-apk, apk-build-trigger]
   pull_request:
     branches: [main]
   workflow_dispatch:
