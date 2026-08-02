@@ -1,5 +1,5 @@
 {
-  "updated":"2026-08-02T20:58:00+02:00",
+  "updated":"2026-08-02T21:12:00+02:00",
   "validFor":"2026-08-03",
   "note":"0.00 bedeutet: Preis derzeit nicht verifiziert. Preise können in der App manuell geändert werden.",
   "offers":[
@@ -20,6 +20,20 @@
     {"item":"Obst","shop":"HOFER","brand":"Obstangebot","price":"0.00"},
     {"item":"Gemüse","shop":"PENNY","brand":"Ich bin Österreich Rispentomaten","price":"2.39"},
     {"item":"Mineralwasser","shop":"BILLA","brand":"BILLA immer gut","price":"0.55"},
-    {"item":"Weizenbier","shop":"SPAR","brand":"Günstigste verifizierte Aktionsmarke","price":"0.00"}
+    {
+      "item":"Weizenbier",
+      "shop":"SPAR",
+      "brand":"Gösser",
+      "variety":"NaturWeizen",
+      "action":"−50 % auf Gösser-Biere",
+      "normalPrice":"",
+      "discount":"50 %",
+      "price":"0.00",
+      "package":"0,5-l-Flasche oder 20 × 0,5-l-Kiste",
+      "totalQuantity":"bei Kiste 10 Liter",
+      "unitPrice":"wird nach Filialpreis berechnet",
+      "deposit":"zusätzlich, Höhe vor Ort prüfen",
+      "validUntil":"2026-08-05"
+    }
   ]
 }
