@@ -1,0 +1,25 @@
+{
+  "updated":"2026-08-02T20:58:00+02:00",
+  "validFor":"2026-08-03",
+  "note":"0.00 bedeutet: Preis derzeit nicht verifiziert. Preise können in der App manuell geändert werden.",
+  "offers":[
+    {"item":"Semmeln/Brötchen","shop":"HOFER","brand":"Backbox","price":"0.00"},
+    {"item":"Brot","shop":"HOFER","brand":"Zurück zum Ursprung Bio-Toast","price":"1.49"},
+    {"item":"Butter","shop":"HOFER","brand":"Milsani Irische Butter","price":"1.69"},
+    {"item":"Marmelade","shop":"SPAR","brand":"Darbo","price":"0.00"},
+    {"item":"Honig","shop":"HOFER","brand":"Natur aktiv","price":"0.00"},
+    {"item":"Schinken","shop":"PENNY","brand":"Ich bin Österreich","price":"0.00"},
+    {"item":"Aufschnitt","shop":"PENNY","brand":"Ich bin Österreich Bratenaufschnitt","price":"2.99"},
+    {"item":"Käse","shop":"PENNY","brand":"Schärdinger Mondseer","price":"4.49"},
+    {"item":"Eier","shop":"HOFER","brand":"Zurück zum Ursprung","price":"0.00"},
+    {"item":"Joghurt","shop":"PENNY","brand":"GAZI Ciftlik Naturjoghurt","price":"1.89"},
+    {"item":"Milch","shop":"PENNY","brand":"Schärdinger Formil Vollmilch","price":"0.89"},
+    {"item":"Orangensaft","shop":"PENNY","brand":"Happy Day","price":"0.00"},
+    {"item":"Kaffee","shop":"PENNY","brand":"Tchibo Feine Milde","price":"7.99"},
+    {"item":"Tee","shop":"HOFER","brand":"Westminster","price":"0.00"},
+    {"item":"Obst","shop":"HOFER","brand":"Obstangebot","price":"0.00"},
+    {"item":"Gemüse","shop":"PENNY","brand":"Ich bin Österreich Rispentomaten","price":"2.39"},
+    {"item":"Mineralwasser","shop":"BILLA","brand":"BILLA immer gut","price":"0.55"},
+    {"item":"Weizenbier","shop":"SPAR","brand":"Günstigste verifizierte Aktionsmarke","price":"0.00"}
+  ]
+}
