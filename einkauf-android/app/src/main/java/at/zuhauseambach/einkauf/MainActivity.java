@@ -2,6 +2,8 @@ package at.zuhauseambach.einkauf;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.print.PrintAttributes;
 import android.print.PrintManager;
 import android.webkit.JavascriptInterface;
@@ -11,9 +13,19 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 public class MainActivity extends Activity {
+    private static final long REFRESH_INTERVAL_MS = 60L * 60L * 1000L;
+
     private WebView webView;
     private boolean pageReady = false;
     private long lastRefreshRequest = 0L;
+    private final Handler refreshHandler = new Handler(Looper.getMainLooper());
+    private final Runnable hourlyRefresh = new Runnable() {
+        @Override
+        public void run() {
+            requestFreshOffers(true);
+            refreshHandler.postDelayed(this, REFRESH_INTERVAL_MS);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +58,14 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         requestFreshOffers(false);
+        refreshHandler.removeCallbacks(hourlyRefresh);
+        refreshHandler.postDelayed(hourlyRefresh, REFRESH_INTERVAL_MS);
+    }
+
+    @Override
+    protected void onPause() {
+        refreshHandler.removeCallbacks(hourlyRefresh);
+        super.onPause();
     }
 
     private void requestFreshOffers(boolean force) {
@@ -60,6 +80,16 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    protected void onDestroy() {
+        refreshHandler.removeCallbacks(hourlyRefresh);
+        if (webView != null) {
+            webView.destroy();
+            webView = null;
+        }
+        super.onDestroy();
+    }
+
+    @Override
     public void onBackPressed() {
         if (webView != null && webView.canGoBack()) webView.goBack();
         else super.onBackPressed();
@@ -70,7 +100,7 @@ public class MainActivity extends Activity {
         public void printShoppingList() {
             runOnUiThread(() -> {
                 PrintManager manager = (PrintManager) getSystemService(PRINT_SERVICE);
-                if (manager == null) return;
+                if (manager == null || webView == null) return;
                 String jobName = "Einkauf Zuhause am Bach";
                 manager.print(jobName, webView.createPrintDocumentAdapter(jobName), new PrintAttributes.Builder()
                         .setMediaSize(PrintAttributes.MediaSize.ISO_A4)
