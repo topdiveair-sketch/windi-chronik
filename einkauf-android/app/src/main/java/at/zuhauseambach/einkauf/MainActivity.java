@@ -12,6 +12,8 @@ import android.webkit.WebViewClient;
 
 public class MainActivity extends Activity {
     private WebView webView;
+    private boolean pageReady = false;
+    private long lastRefreshRequest = 0L;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,12 +27,36 @@ public class MainActivity extends Activity {
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
         settings.setDatabaseEnabled(true);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
 
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                pageReady = true;
+                requestFreshOffers(true);
+            }
+        });
         webView.setWebChromeClient(new WebChromeClient());
         webView.addJavascriptInterface(new AndroidBridge(), "Android");
         webView.loadUrl("file:///android_asset/index.html");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        requestFreshOffers(false);
+    }
+
+    private void requestFreshOffers(boolean force) {
+        if (webView == null || !pageReady) return;
+        long now = System.currentTimeMillis();
+        if (!force && now - lastRefreshRequest < 5000L) return;
+        lastRefreshRequest = now;
+        webView.evaluateJavascript(
+            "if (typeof load === 'function') { load(false); }",
+            null
+        );
     }
 
     @Override
