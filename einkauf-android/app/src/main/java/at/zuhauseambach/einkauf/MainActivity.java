@@ -42,6 +42,7 @@ public class MainActivity extends Activity {
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
 
+        webView.clearCache(true);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -51,13 +52,13 @@ public class MainActivity extends Activity {
         });
         webView.setWebChromeClient(new WebChromeClient());
         webView.addJavascriptInterface(new AndroidBridge(), "Android");
-        webView.loadUrl("file:///android_asset/index.html");
+        webView.loadUrl("file:///android_asset/index.html?startup=" + System.currentTimeMillis());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        requestFreshOffers(false);
+        requestFreshOffers(true);
         refreshHandler.removeCallbacks(hourlyRefresh);
         refreshHandler.postDelayed(hourlyRefresh, REFRESH_INTERVAL_MS);
     }
@@ -73,8 +74,10 @@ public class MainActivity extends Activity {
         long now = System.currentTimeMillis();
         if (!force && now - lastRefreshRequest < 5000L) return;
         lastRefreshRequest = now;
+        webView.clearCache(false);
         webView.evaluateJavascript(
-            "if (typeof load === 'function') { load(false); }",
+            "(function(){try{if(typeof load==='function'){load(true);return 'load';}" +
+            "location.reload(true);return 'reload';}catch(e){location.reload(true);return 'error-reload';}})()",
             null
         );
     }
