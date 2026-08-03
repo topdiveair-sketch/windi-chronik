@@ -3,8 +3,14 @@ name: Build Einkauf App APK
 on:
   push:
     branches: [main, einkauf-app-apk, apk-build-trigger]
+    paths:
+      - 'einkauf-android/**'
+      - '.github/workflows/build-einkauf-app-apk.yml'
   pull_request:
     branches: [main]
+    paths:
+      - 'einkauf-android/**'
+      - '.github/workflows/build-einkauf-app-apk.yml'
   workflow_dispatch:
 
 jobs:
