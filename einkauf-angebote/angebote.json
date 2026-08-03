@@ -1,10 +1,10 @@
 {
-  "updated": "2026-08-03T19:01:00+02:00",
-  "checkedAt": "2026-08-03T19:01:00+02:00",
+  "updated": "2026-08-03T20:58:00+02:00",
+  "checkedAt": "2026-08-03T20:58:00+02:00",
   "validFor": "2026-08-03",
   "validUntil": "2026-08-05",
   "region": "Melk und Umgebung",
-  "note": "Am 03.08.2026 um 19:01 Uhr erneut anhand aktuell auffindbarer offizieller Händlerangebote geprüft. Gegenüber 18:02 Uhr wurden keine günstigeren verifizierbaren Angebote gefunden. 0.00 bedeutet: kein verlässlicher aktueller Preis bestätigt. Pfand wurde beim Weizenbier nicht berücksichtigt.",
+  "note": "Am 03.08.2026 um 20:58 Uhr erneut anhand aktuell auffindbarer offizieller Händlerangebote geprüft. Gegenüber 19:01 Uhr wurden keine günstigeren verifizierbaren Angebote gefunden. 0.00 bedeutet: kein verlässlicher aktueller Preis bestätigt. Pfand wurde beim Weizenbier nicht berücksichtigt.",
   "offers": [
     {"item":"Honig","category":"Frühstück","shop":"HOFER","brand":"Natur aktiv","product":"Honig","package":"","quantity":1,"price":"0.00","unitPrice":"","regularPrice":"","discount":"","validFrom":"","validUntil":"2026-08-03","source":"https://www.hofer.at/angebote","verified":false},
     {"item":"Tee","category":"Frühstück","shop":"HOFER","brand":"Westminster","product":"Tee","package":"","quantity":1,"price":"0.00","unitPrice":"","regularPrice":"","discount":"","validFrom":"","validUntil":"2026-08-03","source":"https://www.hofer.at/angebote","verified":false},
