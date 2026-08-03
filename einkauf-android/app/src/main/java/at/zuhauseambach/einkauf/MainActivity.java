@@ -1,7 +1,9 @@
 package at.zuhauseambach.einkauf;
 
+import android.Manifest;
 import android.app.*;
 import android.content.*;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.*;
@@ -21,12 +23,13 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainActivity extends Activity {
     private static final long REFRESH_INTERVAL_MS = 60L * 60L * 1000L;
-    private static final int PICK_OR_CAPTURE_IMAGE = 4101;
+    private static final int CAMERA_REQUEST = 4101;
+    private static final int GALLERY_REQUEST = 4102;
+    private static final int CAMERA_PERMISSION_REQUEST = 5101;
 
     private WebView webView;
     private boolean pageReady = false;
@@ -53,7 +56,7 @@ public class MainActivity extends Activity {
         cameraButton.setText("📷 Artikel erkennen");
         cameraButton.setTextSize(14);
         cameraButton.setAllCaps(false);
-        cameraButton.setOnClickListener(v -> openImageChooser());
+        cameraButton.setOnClickListener(v -> showImageSourceDialog());
         FrameLayout.LayoutParams cameraParams = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.WRAP_CONTENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -107,28 +110,74 @@ public class MainActivity extends Activity {
                 null);
     }
 
-    private void openImageChooser() {
-        Intent gallery = new Intent(Intent.ACTION_GET_CONTENT);
-        gallery.setType("image/*");
+    private void showImageSourceDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Artikel erkennen")
+                .setItems(new String[]{"Foto aufnehmen", "Bild aus Galerie wählen"}, (dialog, which) -> {
+                    if (which == 0) ensureCameraPermissionAndOpen();
+                    else openGallery();
+                })
+                .setNegativeButton("Abbrechen", null)
+                .show();
+    }
+
+    private void ensureCameraPermissionAndOpen() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST);
+            return;
+        }
+        openCamera();
+    }
+
+    private void openCamera() {
         Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        Intent chooser = Intent.createChooser(gallery, "Artikel fotografieren oder Foto auswählen");
-        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{camera});
-        startActivityForResult(chooser, PICK_OR_CAPTURE_IMAGE);
+        if (camera.resolveActivity(getPackageManager()) == null) {
+            Toast.makeText(this, "Keine Kamera-App verfügbar", Toast.LENGTH_LONG).show();
+            return;
+        }
+        try {
+            startActivityForResult(camera, CAMERA_REQUEST);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, "Kamera konnte nicht geöffnet werden", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void openGallery() {
+        Intent gallery = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        gallery.addCategory(Intent.CATEGORY_OPENABLE);
+        gallery.setType("image/*");
+        try {
+            startActivityForResult(gallery, GALLERY_REQUEST);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, "Galerie konnte nicht geöffnet werden", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode != CAMERA_PERMISSION_REQUEST) return;
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            openCamera();
+        } else {
+            Toast.makeText(this, "Kamerazugriff wurde nicht erlaubt. Bitte in den App-Einstellungen freigeben.", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != PICK_OR_CAPTURE_IMAGE || resultCode != RESULT_OK || data == null) return;
+        if (resultCode != RESULT_OK) return;
         try {
             Bitmap bitmap = null;
-            Uri uri = data.getData();
-            if (uri != null) bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            if (bitmap == null && data.getExtras() != null) {
+            if (requestCode == GALLERY_REQUEST && data != null && data.getData() != null) {
+                Uri uri = data.getData();
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            } else if (requestCode == CAMERA_REQUEST && data != null && data.getExtras() != null) {
                 Object raw = data.getExtras().get("data");
                 if (raw instanceof Bitmap) bitmap = (Bitmap) raw;
             }
             if (bitmap == null) {
-                Toast.makeText(this, "Foto konnte nicht gelesen werden", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Das Foto wurde nicht von der Kamera zurückgegeben", Toast.LENGTH_LONG).show();
                 return;
             }
             recognizeArticle(bitmap);
