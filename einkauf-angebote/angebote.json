@@ -1,9 +1,9 @@
 {
-  "updated": "2026-08-03T11:16:00+02:00",
+  "updated": "2026-08-03T11:20:00+02:00",
   "validFor": "2026-08-03",
   "validUntil": "2026-08-05",
   "region": "Melk und Umgebung",
-  "note": "Nur aktuell verifizierte Preise sind eingetragen. 0.00 bedeutet: kein verlässlicher aktueller Preis bestätigt. Original- und kompatible Canon-Patronen werden getrennt verglichen.",
+  "note": "Nur aktuell verifizierte Preise sind eingetragen. 0.00 bedeutet: kein verlässlicher aktueller Preis bestätigt. Wein aus der Wachau wird vor anderen niederösterreichischen Weinen bevorzugt.",
   "offers": [
     {"item":"Semmeln/Brötchen","category":"Frühstück","shop":"HOFER","brand":"BACKBOX","price":"0.00","verified":false,"validUntil":"2026-08-03"},
     {"item":"Brot","category":"Frühstück","shop":"PENNY","brand":"Ölz Super Soft Sandwich","package":"750 g","price":"2.79","unitPrice":"3.72 €/kg","verified":true,"validFrom":"2026-07-30","validUntil":"2026-08-05"},
@@ -23,6 +23,9 @@
     {"item":"Gemüse","category":"Frühstück","shop":"PENNY","brand":"Ich bin Österreich Rispentomaten","package":"1 kg","normalPrice":"2.85","discount":"16 %","price":"2.39","unitPrice":"2.39 €/kg","verified":true,"validFrom":"2026-08-03","validUntil":"2026-08-05"},
     {"item":"Mineralwasser","category":"Getränke","shop":"BILLA","brand":"Clever Urquelle Mineralwasser Mild","package":"1.5 l Einweg","price":"0.42","unitPrice":"0.28 €/l","verified":true,"validUntil":"2026-08-03"},
     {"item":"Weizenbier","category":"Getränke","shop":"SPAR","brand":"Gösser NaturWeizen","price":"0.00","action":"Kein verifizierter Endpreis; Pfand wird beim Vergleich ignoriert","verified":false,"validUntil":"2026-08-03"},
+    {"item":"Weißwein Niederösterreich/Wachau","category":"Wein","shop":"SPAR","brand":"günstigster Wachauer Weißwein","product":"Weißwein","origin":"Österreich","region":"Wachau bevorzugt, danach Niederösterreich","variety":"Grüner Veltliner oder Riesling bevorzugt","package":"0,75 l","price":"0.00","unitPrice":"0.00 €/l","verified":false,"validUntil":"2026-08-03"},
+    {"item":"Roséwein Niederösterreich/Wachau","category":"Wein","shop":"SPAR","brand":"günstigster Wachauer oder niederösterreichischer Rosé","product":"Roséwein","origin":"Österreich","region":"Wachau bevorzugt, danach Niederösterreich","package":"0,75 l","price":"0.00","unitPrice":"0.00 €/l","verified":false,"validUntil":"2026-08-03"},
+    {"item":"Rotwein Niederösterreich/Wachau","category":"Wein","shop":"SPAR","brand":"günstigster niederösterreichischer Rotwein","product":"Rotwein","origin":"Österreich","region":"Wachau bevorzugt, danach Niederösterreich","variety":"Zweigelt oder Blaufränkisch bevorzugt","package":"0,75 l","price":"0.00","unitPrice":"0.00 €/l","verified":false,"validUntil":"2026-08-03"},
     {"item":"Canon PG-510 Schwarz","category":"Büromaterial","shop":"SPAR","brand":"Canon PG-510 Original","product":"Schwarze Tintenpatrone","package":"1 Stück","price":"0.00","unitPrice":"0.00 €/Stück","verified":false,"validUntil":"2026-08-03"},
     {"item":"Canon CL-511 Farbe","category":"Büromaterial","shop":"SPAR","brand":"Canon CL-511 Original","product":"Farb-Tintenpatrone","package":"1 Stück","price":"0.00","unitPrice":"0.00 €/Stück","verified":false,"validUntil":"2026-08-03"},
     {"item":"Kopierpapier DIN A4","category":"Büromaterial","shop":"SPAR","brand":"günstigstes verifiziertes Angebot","product":"DIN A4 Kopierpapier 80 g/m²","package":"500 Blatt","price":"0.00","unitPrice":"0.00 €/500 Blatt","verified":false,"validUntil":"2026-08-03"}
