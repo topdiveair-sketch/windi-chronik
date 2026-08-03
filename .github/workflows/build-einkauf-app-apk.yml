@@ -2,14 +2,23 @@ name: Build Einkauf App APK
 
 on:
   push:
-    branches: [main, einkauf-app-apk]
+    branches: [main, einkauf-app-apk, apk-build-trigger]
+    paths:
+      - 'einkauf-android/**'
+      - '.github/workflows/build-einkauf-app-apk.yml'
   pull_request:
     branches: [main]
+    paths:
+      - 'einkauf-android/**'
+      - '.github/workflows/build-einkauf-app-apk.yml'
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: einkauf-android
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -18,12 +27,12 @@ jobs:
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.7'
+          gradle-version: '8.9'
       - name: Build debug APK
         run: gradle assembleDebug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Einkauf-Zuhause-am-Bach-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: einkauf-android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
