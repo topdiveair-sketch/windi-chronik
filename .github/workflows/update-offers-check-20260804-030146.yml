@@ -1,0 +1,44 @@
+name: Update offers check timestamp 2026-08-04 03:01
+
+on:
+  push:
+    paths:
+      - '.github/workflows/update-offers-check-20260804-030146.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update checkedAt and updated
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          p = Path('einkauf-angebote/angebote.json')
+          data = json.loads(p.read_text(encoding='utf-8'))
+          stamp = '2026-08-04T03:01:46+02:00'
+          data['checkedAt'] = stamp
+          data['updated'] = stamp
+          data['validFor'] = '2026-08-04'
+          data['note'] = ('Am 04.08.2026 um 03:01:46 Uhr anhand aktuell auffindbarer offizieller Händlerseiten erneut geprüft. '
+                          'Es wurden keine günstigeren verifizierbaren Angebote als beim vorherigen Lauf gefunden. '
+                          'PENNY-Angebote bleiben bis 05.08.2026 gültig. Pfand wurde beim Weizenbier vollständig ignoriert. '
+                          '0.00 bedeutet: kein verlässlicher aktueller Preis bestätigt.')
+          p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+      - name: Verify timestamp
+        shell: python
+        run: |
+          import json
+          data = json.load(open('einkauf-angebote/angebote.json', encoding='utf-8'))
+          assert data['checkedAt'] == '2026-08-04T03:01:46+02:00'
+      - name: Commit updated file
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add einkauf-angebote/angebote.json
+          git commit -m 'Angebote geprüft: 2026-08-04 03:01 Europe/Vienna'
+          git push
