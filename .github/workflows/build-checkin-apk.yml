@@ -1,0 +1,43 @@
+name: Gäste-Check-in APK bauen
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'app/**'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
+      - 'gradle.properties'
+      - '.github/workflows/build-checkin-apk.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Quellcode laden
+        uses: actions/checkout@v4
+
+      - name: Java 17 einrichten
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Gradle einrichten
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: APK bauen
+        run: gradle :app:assembleDebug --stacktrace
+
+      - name: APK eindeutig benennen
+        run: cp app/build/outputs/apk/debug/app-debug.apk Zuhause_am_Bach_Gaeste_Checkin.apk
+
+      - name: APK bereitstellen
+        uses: actions/upload-artifact@v4
+        with:
+          name: Zuhause-am-Bach-Gaeste-Checkin-APK
+          path: Zuhause_am_Bach_Gaeste_Checkin.apk
+          retention-days: 30
