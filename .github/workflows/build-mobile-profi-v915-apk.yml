@@ -1,0 +1,43 @@
+name: Zuhause am Bach Mobil V91.5 APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ mobile-profi-v915-apk ]
+    paths:
+      - 'app/**'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
+      - 'gradle.properties'
+      - '.github/workflows/build-mobile-profi-v915-apk.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Quellcode laden
+        uses: actions/checkout@v4
+
+      - name: Java 17 einrichten
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Gradle einrichten
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: APK bauen
+        run: gradle :app:assembleDebug --stacktrace
+
+      - name: APK benennen
+        run: cp app/build/outputs/apk/debug/app-debug.apk Zuhause_am_Bach_Mobil_V91_5.apk
+
+      - name: APK bereitstellen
+        uses: actions/upload-artifact@v4
+        with:
+          name: Zuhause-am-Bach-Mobil-V91-5-APK
+          path: Zuhause_am_Bach_Mobil_V91_5.apk
+          retention-days: 30
