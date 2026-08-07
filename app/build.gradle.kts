@@ -10,8 +10,8 @@ android {
         applicationId = "at.zuhauseambach.mobil"
         minSdk = 26
         targetSdk = 35
-        versionCode = 917
-        versionName = "91.7"
+        versionCode = 918
+        versionName = "91.8"
     }
 
     buildTypes {
