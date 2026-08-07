@@ -3,15 +3,15 @@ plugins {
 }
 
 android {
-    namespace = "at.zuhauseambach.windichronik"
+    namespace = "at.zuhauseambach.mobil"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "at.zuhauseambach.windichronik"
+        applicationId = "at.zuhauseambach.mobil"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 915
+        versionName = "91.5"
     }
 
     buildTypes {
