@@ -24,11 +24,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PORT = 8765;
-    private static final int TIMEOUT_MS = 450;
-    private static final long RETRY_MS = 10000L;
+    private static final int TIMEOUT_MS = 350;
+    private static final long RETRY_MS = 8000L;
 
     private WebView webView;
-    private final ExecutorService executor = Executors.newFixedThreadPool(28);
+    private final ExecutorService executor = Executors.newFixedThreadPool(32);
     private final AtomicBoolean scanning = new AtomicBoolean(false);
     private volatile boolean serverLoaded = false;
 
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         webView.setWebViewClient(new WebViewClient());
         webView.clearCache(true);
-        showSearchingPage();
+        showSearchingPage("Hotel-PC wird automatisch gesucht …", "Die Verbindung wird selbstständig hergestellt. V91.7 prüft das lokale WLAN fortlaufend.");
         discoverServer();
     }
 
@@ -58,14 +58,15 @@ public class MainActivity extends AppCompatActivity {
         if (!serverLoaded) discoverServer();
     }
 
-    private void showSearchingPage() {
+    private void showSearchingPage(String title, String detail) {
         String html = "<!doctype html><html><head><meta name='viewport' content='width=device-width,initial-scale=1'>" +
                 "<style>body{font-family:system-ui;background:#f4f7fa;color:#18314a;margin:0;padding:28px}" +
                 ".box{max-width:600px;margin:40px auto;background:white;border-radius:18px;padding:26px;box-shadow:0 4px 20px #0002}" +
-                "h1{color:#0b3d70;margin-top:0}.dot{font-size:42px;color:#4f8f25}.small{color:#607286;line-height:1.5}</style></head>" +
+                "h1{color:#0b3d70;margin-top:0}.dot{font-size:42px;color:#4f8f25}.small{color:#607286;line-height:1.5}.ver{color:#789;font-size:14px;margin-top:22px}</style></head>" +
                 "<body><div class='box'><div class='dot'>●</div><h1>Zuhause am Bach Mobil</h1>" +
-                "<p><b>Hotel-PC wird automatisch gesucht …</b></p>" +
-                "<p class='small'>Handy und Hotel-PC müssen im selben WLAN sein. Sobald der Mobilserver gefunden wird, öffnet sich die App automatisch.</p>" +
+                "<p><b>" + title + "</b></p>" +
+                "<p class='small'>" + detail + "</p>" +
+                "<p class='ver'>Version 91.7 · automatische Verbindung</p>" +
                 "</div></body></html>";
         webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null);
     }
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                             if (found.get()) return;
                             if (isZabServer(host) && found.compareAndSet(false, true)) {
                                 serverLoaded = true;
-                                runOnUiThread(() -> webView.loadUrl("http://" + host + ":" + PORT + "/index.html?v=915"));
+                                runOnUiThread(() -> webView.loadUrl("http://" + host + ":" + PORT + "/index.html?v=917"));
                             }
                         });
                     }
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (!found.get()) {
                     runOnUiThread(() -> {
-                        showSearchingPage();
+                        showSearchingPage("Hotel-PC noch nicht gefunden – Suche läuft weiter …", "Die App versucht es automatisch erneut. Nach Installation der PC-Version V91.7 ist keine IP-Eingabe nötig.");
                         webView.postDelayed(this::discoverServer, RETRY_MS);
                     });
                 }
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
             String line;
             while ((line = reader.readLine()) != null) body.append(line);
             String text = body.toString();
-            return text.contains("\"ok\": true") && text.contains("server_version") && text.contains("data_file");
+            return (text.contains("\"ok\": true") || text.contains("\"ok\":true")) && text.contains("server_version") && text.contains("data_file");
         } catch (Exception ignored) {
             return false;
         } finally {
