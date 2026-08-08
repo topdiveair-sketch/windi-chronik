@@ -8,11 +8,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.HttpURLConnection;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
@@ -24,7 +28,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int PORT = 8765;
+    private static final int HTTP_PORT = 8765;
+    private static final int DISCOVERY_PORT = 8766;
     private static final int TIMEOUT_MS = 350;
     private static final long RETRY_MS = 7000L;
 
@@ -49,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         webView.setWebViewClient(new WebViewClient());
         webView.clearCache(true);
-        showStatus("Hotel-PC wird gesucht …", "Netzwerk wird geprüft.", networkSummary(), 0, 0);
+        showStatus("Hotel-PC wird automatisch gesucht …", "Zuerst per WLAN-Broadcast, danach per Netzwerksuche.", networkSummary(), 0, 0);
         discoverServer();
     }
 
@@ -60,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showStatus(String title, String detail, String network, int checked, int total) {
-        String progress = total > 0 ? ("Geprüft: " + checked + " von " + total + " Adressen") : "Scan wird vorbereitet";
+        String progress = total > 0 ? ("Fallback-Scan: " + checked + " von " + total + " Adressen") : "Broadcast-Erkennung wird vorbereitet";
         String html = "<!doctype html><html><head><meta name='viewport' content='width=device-width,initial-scale=1'>" +
                 "<style>body{font-family:system-ui;background:#f4f7fa;color:#18314a;margin:0;padding:22px}" +
                 ".box{max-width:600px;margin:28px auto;background:white;border-radius:18px;padding:24px;box-shadow:0 4px 20px #0002}" +
@@ -69,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
                 ".ver{color:#789;font-size:13px;margin-top:20px}</style></head>" +
                 "<body><div class='box'><div class='dot'>●</div><h1>Zuhause am Bach Mobil</h1>" +
                 "<p><b>" + esc(title) + "</b></p><p class='small'>" + esc(detail) + "</p>" +
-                "<div class='diag'><b>Diagnose</b><br>" + esc(network) + "<br>" + esc(progress) + "<br>Gesuchter Dienst: TCP " + PORT + " /api/status</div>" +
-                "<p class='ver'>Version 91.8 · automatische Verbindung mit Diagnose</p></div></body></html>";
+                "<div class='diag'><b>Verbindung</b><br>" + esc(network) + "<br>" + esc(progress) + "<br>Automatische Erkennung: UDP " + DISCOVERY_PORT + " → TCP " + HTTP_PORT + "</div>" +
+                "<p class='ver'>Version 93 · ZAB Auto-Discovery</p></div></body></html>";
         webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null);
     }
 
@@ -85,47 +90,99 @@ public class MainActivity extends AppCompatActivity {
         return "Handy-IP: " + String.join(", ", ips) + " | Subnetz(e): " + String.join(", ", localSubnets());
     }
 
+    private void loadServer(String host) {
+        if (host == null || host.isEmpty() || serverLoaded) return;
+        if (!isZabServer(host)) return;
+        serverLoaded = true;
+        runOnUiThread(() -> webView.loadUrl("http://" + host + ":" + HTTP_PORT + "/index.html?v=93"));
+    }
+
+    private String discoverByBroadcast() {
+        DatagramSocket socket = null;
+        try {
+            socket = new DatagramSocket();
+            socket.setBroadcast(true);
+            socket.setSoTimeout(1200);
+            byte[] payload = "ZAB_DISCOVER".getBytes(StandardCharsets.UTF_8);
+
+            Set<String> broadcasts = new LinkedHashSet<>();
+            broadcasts.add("255.255.255.255");
+            for (String subnet : localSubnets()) broadcasts.add(subnet + "255");
+
+            for (String target : broadcasts) {
+                DatagramPacket p = new DatagramPacket(payload, payload.length, InetAddress.getByName(target), DISCOVERY_PORT);
+                socket.send(p);
+            }
+
+            long until = System.currentTimeMillis() + 1600;
+            while (System.currentTimeMillis() < until) {
+                try {
+                    byte[] buf = new byte[1024];
+                    DatagramPacket response = new DatagramPacket(buf, buf.length);
+                    socket.receive(response);
+                    String text = new String(response.getData(), 0, response.getLength(), StandardCharsets.UTF_8);
+                    if (text.contains("ZABMobileServer") && text.contains("http_port")) {
+                        return response.getAddress().getHostAddress();
+                    }
+                } catch (SocketTimeoutException e) {
+                    break;
+                }
+            }
+        } catch (Exception ignored) {
+        } finally {
+            if (socket != null) socket.close();
+        }
+        return null;
+    }
+
     private void discoverServer() {
         if (!scanning.compareAndSet(false, true)) return;
         serverLoaded = false;
         executor.execute(() -> {
             try {
+                runOnUiThread(() -> showStatus("Hotel-PC wird automatisch gesucht …", "WLAN-Broadcast wird gesendet.", networkSummary(), 0, 0));
+                String broadcastHost = discoverByBroadcast();
+                if (broadcastHost != null && isZabServer(broadcastHost)) {
+                    loadServer(broadcastHost);
+                    return;
+                }
+
                 List<String> subnets = localSubnets();
                 int total = subnets.size() * 254;
                 AtomicBoolean found = new AtomicBoolean(false);
                 AtomicInteger checked = new AtomicInteger(0);
                 if (subnets.isEmpty()) {
-                    runOnUiThread(() -> showStatus("Kein WLAN-Netz erkannt", "Das Handy hat keine nutzbare private IPv4-Adresse. Bitte WLAN-Verbindung prüfen.", networkSummary(), 0, 0));
+                    runOnUiThread(() -> showStatus("Kein WLAN-Netz erkannt", "Das Handy hat keine nutzbare private IPv4-Adresse.", networkSummary(), 0, 0));
                     return;
                 }
 
+                runOnUiThread(() -> showStatus("Broadcast ohne Antwort – Fallback läuft", "Jetzt wird das lokale Netz automatisch durchsucht.", networkSummary(), 0, total));
                 for (String subnet : subnets) {
                     for (int i = 1; i <= 254; i++) {
                         final String host = subnet + i;
                         executor.execute(() -> {
-                            if (found.get()) return;
+                            if (found.get() || serverLoaded) return;
                             boolean ok = isZabServer(host);
                             int n = checked.incrementAndGet();
                             if (ok && found.compareAndSet(false, true)) {
-                                serverLoaded = true;
-                                runOnUiThread(() -> webView.loadUrl("http://" + host + ":" + PORT + "/index.html?v=918"));
+                                loadServer(host);
                                 return;
                             }
-                            if (n % 40 == 0 && !found.get()) {
-                                runOnUiThread(() -> showStatus("Hotel-PC wird gesucht …", "Das WLAN ist vorhanden, der Mobilserver wurde bisher aber noch nicht gefunden.", networkSummary(), n, total));
+                            if (n % 50 == 0 && !found.get()) {
+                                runOnUiThread(() -> showStatus("Hotel-PC wird gesucht …", "Broadcast war nicht verfügbar; Fallback-Scan läuft.", networkSummary(), n, total));
                             }
                         });
                     }
                 }
 
                 long waitUntil = System.currentTimeMillis() + 12000;
-                while (!found.get() && System.currentTimeMillis() < waitUntil) {
+                while (!found.get() && !serverLoaded && System.currentTimeMillis() < waitUntil) {
                     try { Thread.sleep(150); } catch (InterruptedException ignored) { break; }
                 }
-                if (!found.get()) {
+                if (!found.get() && !serverLoaded) {
                     int n = checked.get();
                     runOnUiThread(() -> {
-                        showStatus("Hotel-PC nicht erreichbar", "Wenn PC und Handy im selben WLAN sind, ist sehr wahrscheinlich Port 8765 am PC oder die Gerätekommunikation im Router blockiert. Die Suche startet automatisch erneut.", networkSummary(), n, total);
+                        showStatus("Hotel-PC nicht erreichbar", "Weder Broadcast noch Fallback-Scan haben den ZAB-Mobilserver gefunden. Die Suche startet automatisch erneut.", networkSummary(), n, total);
                         webView.postDelayed(this::discoverServer, RETRY_MS);
                     });
                 }
@@ -175,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isZabServer(String host) {
         HttpURLConnection conn = null;
         try {
-            URL url = new URL("http://" + host + ":" + PORT + "/api/status");
+            URL url = new URL("http://" + host + ":" + HTTP_PORT + "/api/status");
             conn = (HttpURLConnection) url.openConnection();
             conn.setConnectTimeout(TIMEOUT_MS);
             conn.setReadTimeout(TIMEOUT_MS);
