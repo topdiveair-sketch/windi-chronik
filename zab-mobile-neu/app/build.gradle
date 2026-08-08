@@ -1,0 +1,27 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'at.zuhauseambach.mobile.neu'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'at.zuhauseambach.mobile.neu'
+        minSdk 26
+        targetSdk 35
+        versionCode 100
+        versionName '100.0'
+    }
+    signingConfigs {
+        release {
+            storeFile file('zab-release.jks')
+            storePassword 'ZABmobil2026'
+            keyAlias 'zabmobile'
+            keyPassword 'ZABmobil2026'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
+}
