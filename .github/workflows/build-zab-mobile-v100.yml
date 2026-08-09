@@ -1,4 +1,4 @@
-name: Build ZAB Mobil Neu V100
+name: Build ZAB Mobil Neu V101
 on:
   push:
     branches: [ "zab-mobile-neu-v100" ]
@@ -19,16 +19,16 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.7'
-      - name: Generate release signing key
-        run: |
-          keytool -genkeypair -v -keystore app/zab-release.jks -alias zabmobile -keyalg RSA -keysize 3072 -validity 10000 -storepass ZABmobil2026 -keypass ZABmobil2026 -dname "CN=Zuhause am Bach, OU=Mobil, O=ZAB, L=Aggsbach Markt, ST=Niederoesterreich, C=AT"
+      - name: Restore V100 release signing key
+        uses: actions/download-artifact@v4
+        with:
+          name: ZAB_Mobil_NEU_V100_SIGNING_KEY
+          path: zab-mobile-neu/app
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 31259954086
       - name: Build release APK
         run: gradle :app:assembleRelease --stacktrace
       - uses: actions/upload-artifact@v4
         with:
-          name: ZAB_Mobil_NEU_V100
+          name: ZAB_Mobil_NEU_V101
           path: zab-mobile-neu/app/build/outputs/apk/release/app-release.apk
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ZAB_Mobil_NEU_V100_SIGNING_KEY
-          path: zab-mobile-neu/app/zab-release.jks
