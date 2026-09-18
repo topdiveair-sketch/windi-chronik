@@ -1,0 +1,29 @@
+name: Windi Guardian Healthcheck
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'app/**'
+      - 'data/**'
+      - 'einkauf-angebote/**'
+      - 'scripts/guardian_check.py'
+      - '.github/workflows/guardian-health.yml'
+  schedule:
+    - cron: '17 5 * * *'
+
+jobs:
+  guardian:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository laden
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Programme, Daten und Datenschutz prüfen
+        run: python scripts/guardian_check.py
